@@ -68,3 +68,21 @@ foreach(_script ${G4AMSTEST_SCRIPTS})
     )
 endforeach()
 
+
+# g42so
+find_program(G42SO g42so PATHS ~/src/t4g4interface/g42so)
+set(LIBAMSTEST_FILES
+  "${CMAKE_SOURCE_DIR}/src/AMSTestDetectorConstruction.cc"
+  "${CMAKE_SOURCE_DIR}/src/AMSTestDetectorConstructionMessenger.cc"
+  "${CMAKE_SOURCE_DIR}/src/AMSTestPrimaryGeneratorAction.cc"
+  )
+if(G42SO)
+  message(STATUS "Found g42so: ${G42SO}")
+  add_custom_command(OUTPUT libAMSTest.so
+    COMMAND "${G42SO}" -o libAMSTest.so -I "${CMAKE_SOURCE_DIR}/include" --geant4-config "${Geant4_DIR}/../../bin/geant4-config" ${LIBAMSTEST_FILES}
+    DEPENDS ${LIBAMSTEST_FILES}
+    VERBATIM)
+  add_custom_target(libAMSTest DEPENDS libAMSTest.so)
+else()
+  message(STATUS "Could not find g42so")
+endif()
