@@ -37,9 +37,11 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
   G4double worldR  = detectorR + 1*cm;
 
   G4NistManager* nist = G4NistManager::Instance();
-  G4Material *void_mat =
-    G4NistManager::Instance()->BuildMaterialWithNewDensity("HotGalactic", "G4_Galactic", 1e-30*g/cm3);
-  G4Material* fe_mat  = nist->FindOrBuildMaterial("G4_Fe");
+  G4Material *void_mat_294 =
+    G4NistManager::Instance()->BuildMaterialWithNewDensity("HotGalactic", "G4_Galactic", 1e-30*g/cm3, 294.0*kelvin);
+  G4Material* fe_mat = nist->FindOrBuildMaterial("G4_Fe");
+  G4Material* fe_mat_294 =
+    G4NistManager::Instance()->BuildMaterialWithNewDensity("Fe", "G4_Fe", fe_mat->GetDensity(), 294.0*kelvin);
 
   G4Sphere* solidWorld =
     new G4Sphere("World",
@@ -47,7 +49,7 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
 
   G4LogicalVolume* logicWorld =
     new G4LogicalVolume(solidWorld,          //its solid
-                        void_mat,         //its material
+                        void_mat_294,         //its material
                         "World");            //its name
 
   G4VPhysicalVolume* physWorld =
@@ -66,7 +68,7 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
 
   G4LogicalVolume* logicDetector =
     new G4LogicalVolume(solidDetector,           //its solid
-                        fe_mat,         //its material
+                        fe_mat_294,         //its material
                         "Detector");             //its name
 
   new G4PVPlacement(0,                       //no rotation
@@ -84,7 +86,7 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
 
   G4LogicalVolume* logicSphere =
     new G4LogicalVolume(solidSphere,           //its solid
-                        fe_mat,         //its material
+                        fe_mat_294,         //its material
                         "Sphere");             //its name
 
   new G4PVPlacement(0,                       //no rotation
