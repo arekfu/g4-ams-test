@@ -37,7 +37,8 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
   G4double worldR  = detectorR + 1*cm;
 
   G4NistManager* nist = G4NistManager::Instance();
-  G4Material* void_mat = nist->FindOrBuildMaterial("G4_Galactic");
+  G4Material *void_mat =
+    G4NistManager::Instance()->BuildMaterialWithNewDensity("HotGalactic", "G4_Galactic", 1e-30*g/cm3);
   G4Material* fe_mat  = nist->FindOrBuildMaterial("G4_Fe");
 
   G4Sphere* solidWorld =
