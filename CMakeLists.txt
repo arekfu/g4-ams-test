@@ -82,7 +82,7 @@ if(G42SO)
     COMMAND "${G42SO}" -o libAMSTest.so -I "${CMAKE_SOURCE_DIR}/include" --geant4-config "${Geant4_DIR}/../../bin/geant4-config" ${LIBAMSTEST_FILES}
     DEPENDS ${LIBAMSTEST_FILES}
     VERBATIM)
-  add_custom_target(libAMSTest DEPENDS libAMSTest.so)
+  add_custom_target(libAMSTest ALL DEPENDS libAMSTest.so)
 else()
   message(STATUS "Could not find g42so")
 endif()
