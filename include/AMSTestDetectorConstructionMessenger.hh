@@ -7,6 +7,7 @@
 class AMSTestDetectorConstruction;
 class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithAString;
 
 
 class AMSTestDetectorConstructionMessenger: public G4UImessenger
@@ -23,6 +24,8 @@ class AMSTestDetectorConstructionMessenger: public G4UImessenger
     G4UIdirectory*           amsDirectory;
 
     G4UIcmdWithADoubleAndUnit*      geomCmd;
+
+    G4UIcmdWithAString*      matCmd;
 
 };
 

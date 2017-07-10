@@ -17,7 +17,8 @@ AMSTestDetectorConstruction::AMSTestDetectorConstruction()
 : G4VUserDetectorConstruction(),
   fCheckOverlaps(true),
   objAttributes(0),
-  sphereR(300*cm)
+  sphereR(300*cm),
+  material("Fe")
 {
   theMessenger = new AMSTestDetectorConstructionMessenger(this);
 }
@@ -27,6 +28,7 @@ AMSTestDetectorConstruction::AMSTestDetectorConstruction()
 AMSTestDetectorConstruction::~AMSTestDetectorConstruction()
 {
   delete objAttributes;
+  delete theMessenger;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -38,10 +40,20 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
 
   G4NistManager* nist = G4NistManager::Instance();
   G4Material *void_mat_294 =
-    G4NistManager::Instance()->BuildMaterialWithNewDensity("HotGalactic", "G4_Galactic", 1e-30*g/cm3, 294.0*kelvin);
-  G4Material* fe_mat = nist->FindOrBuildMaterial("G4_Fe");
-  G4Material* fe_mat_294 =
-    G4NistManager::Instance()->BuildMaterialWithNewDensity("Fe", "G4_Fe", fe_mat->GetDensity(), 294.0*kelvin);
+    G4NistManager::Instance()->BuildMaterialWithNewDensity("HotGalactic", "G4_Galactic", 1e-25*g/cm3, 294.0*kelvin);
+  G4Material *the_material = NULL;
+  if(material == "Fe") {
+    G4Material* fe_mat = nist->FindOrBuildMaterial("G4_Fe");
+    the_material =
+      G4NistManager::Instance()->BuildMaterialWithNewDensity("Fe", "G4_Fe", fe_mat->GetDensity(), 294.0*kelvin);
+  } else if(material == "Pb") {
+    G4Material* pb_mat = nist->FindOrBuildMaterial("G4_Pb");
+    the_material =
+      G4NistManager::Instance()->BuildMaterialWithNewDensity("Pb", "G4_Pb", pb_mat->GetDensity(), 294.0*kelvin);
+  } else {
+    G4Exception("AMSTestDetectorConstruction::Construct", "AMSTest0001",
+                FatalErrorInArgument, "Material must be one of: Fe, Pb");
+  }
 
   G4Sphere* solidWorld =
     new G4Sphere("World",
@@ -66,9 +78,9 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
   G4Sphere *solidDetector =
     new G4Sphere("Detector", 0., detectorR, 0., twopi, 0., pi);
 
-  G4LogicalVolume* logicDetector =
+  G4LogicalVolume *logicDetector =
     new G4LogicalVolume(solidDetector,           //its solid
-                        fe_mat_294,         //its material
+                        the_material,         //its material
                         "Detector");             //its name
 
   new G4PVPlacement(0,                       //no rotation
@@ -84,9 +96,9 @@ G4VPhysicalVolume* AMSTestDetectorConstruction::Construct()
   G4Sphere *solidSphere =
     new G4Sphere("Sphere", 0., sphereR, 0., twopi, 0., pi);
 
-  G4LogicalVolume* logicSphere =
+  G4LogicalVolume *logicSphere =
     new G4LogicalVolume(solidSphere,           //its solid
-                        fe_mat_294,         //its material
+                        the_material,         //its material
                         "Sphere");             //its name
 
   new G4PVPlacement(0,                       //no rotation

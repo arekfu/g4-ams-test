@@ -3,6 +3,7 @@
 
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
 
 
 AMSTestDetectorConstructionMessenger::AMSTestDetectorConstructionMessenger(AMSTestDetectorConstruction * const dc) :
@@ -18,6 +19,12 @@ AMSTestDetectorConstructionMessenger::AMSTestDetectorConstructionMessenger(AMSTe
   geomCmd->SetUnitCategory("length");
   geomCmd->AvailableForStates(G4State_PreInit);
 
+  matCmd = new G4UIcmdWithAString("/AMS/setMaterial",this);
+  matCmd->SetGuidance("Select the material of the sphere.");
+  matCmd->SetParameterName("material",false);
+  matCmd->SetCandidates("Fe Pb");
+  matCmd->AvailableForStates(G4State_PreInit);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -25,6 +32,7 @@ AMSTestDetectorConstructionMessenger::AMSTestDetectorConstructionMessenger(AMSTe
 AMSTestDetectorConstructionMessenger::~AMSTestDetectorConstructionMessenger()
 {
   delete geomCmd;
+  delete matCmd;
   delete amsDirectory;
 }
 
@@ -36,6 +44,9 @@ void AMSTestDetectorConstructionMessenger::SetNewValue(G4UIcommand* command, G4S
     const G4double newRadius = geomCmd->GetNewDoubleValue(newValue);
     G4cout << "Setting sphere radius to " << newRadius << G4endl;
     detectorConstruction->SetSphereRadius(newRadius);
+  } else if( command == matCmd ) {
+    G4cout << "Setting geometry material to " << newValue << G4endl;
+    detectorConstruction->SetMaterial(newValue);
   }
 }
 

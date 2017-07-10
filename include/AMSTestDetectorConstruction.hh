@@ -6,7 +6,6 @@
 #include "globals.hh"
 
 class G4VPhysicalVolume;
-class G4LogicalVolume;
 class G4VisAttributes;
 class AMSTestDetectorConstructionMessenger;
 
@@ -24,11 +23,13 @@ class AMSTestDetectorConstruction : public G4VUserDetectorConstruction
   public:
     virtual G4VPhysicalVolume* Construct();
     void SetSphereRadius(const G4double r) { sphereR = r; }
+    void SetMaterial(const G4String &mat) { material = mat; }
 
   private:
     G4bool  fCheckOverlaps;
     G4VisAttributes *objAttributes;
     G4double sphereR;
+    G4String material;
     AMSTestDetectorConstructionMessenger *theMessenger;
 };
 
