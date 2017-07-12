@@ -4,6 +4,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UnitsTable.hh"
 
 
 AMSTestDetectorConstructionMessenger::AMSTestDetectorConstructionMessenger(AMSTestDetectorConstruction * const dc) :
@@ -42,7 +43,7 @@ void AMSTestDetectorConstructionMessenger::SetNewValue(G4UIcommand* command, G4S
 {
   if( command == geomCmd ) {
     const G4double newRadius = geomCmd->GetNewDoubleValue(newValue);
-    G4cout << "Setting sphere radius to " << newRadius << G4endl;
+    G4cout << "Setting sphere radius to " << G4BestUnit(newRadius, "Length") << G4endl;
     detectorConstruction->SetSphereRadius(newRadius);
   } else if( command == matCmd ) {
     G4cout << "Setting geometry material to " << newValue << G4endl;
